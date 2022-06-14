@@ -26,7 +26,7 @@ export class TweetsController {
   findAll() {
     return this.tweetsService.findAll();
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.tweetsService.findOne(+id);
