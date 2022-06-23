@@ -3,6 +3,8 @@ import { Interval } from "@nestjs/schedule";
 import { InjectModel } from "@nestjs/sequelize";
 import { Tweet } from "../entities/tweet.entity";
 import { Cache } from "cache-manager";
+import { InjectQueue } from "@nestjs/bull";
+import { Queue } from "bull";
 
 const CHECK_INTERVAL = 5000;
 
@@ -15,6 +17,7 @@ export class TweetCountService {
   constructor(
     @InjectModel(Tweet) private tweetModel: typeof Tweet,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @InjectQueue("emails") private queueManager: Queue,
   ) {}
 
   @Interval(CHECK_INTERVAL)
@@ -35,6 +38,8 @@ export class TweetCountService {
       );
 
       console.log(`Increasing offset to ${offset + this.COUNT_LIMIT}`);
+
+      this.queueManager.add({ tweets: tweets.map((t) => t.toJSON()) });
     }
   }
 }
