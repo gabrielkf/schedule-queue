@@ -1,6 +1,6 @@
 ## Description
 
-Nest-based server with sqlite database.
+Nest-based microservice with sqlite database.
 
 Reads "tweets" in database every 5 seconds.
 Takes action when 10 new tweets are found (pagination value is cached).
